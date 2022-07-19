@@ -14,6 +14,8 @@ async def food_start(message: types.Message):
     await message.answer("Please, choose something", reply_markup=ikb_menu)
 
 
+print(555)
+
 
 
 
