@@ -1,0 +1,3 @@
+HOST = 'localhost'
+PORT = '8080'
+TOKEN = '5476826662:AAFJt5KzU79sVkfLvLo6fKQSnBEOtXCvbKQ'
