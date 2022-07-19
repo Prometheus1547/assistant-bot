@@ -12,19 +12,9 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 
 async def food_start(message: types.Message):
     await message.answer("Please, choose something", reply_markup=ikb_menu)
-
-
-print(555)
-
-
-
-
-
-
-
-
-
-
+#
+#
+#
 
 def register_handlers_food(dp: Dispatcher):
     dp.register_message_handler(food_start, commands="start", state="*")
