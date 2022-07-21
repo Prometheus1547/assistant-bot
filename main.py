@@ -5,12 +5,12 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from config import TOKEN
 from markups import ikb_menu
-from order import OrderFood
-
+from order import Action, Feel
 
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
+#___________________________________КНОПКА Action________________________________________
 async def start(message: types.Message):
     await message.answer("Please, choose something", reply_markup=ikb_menu)
 
@@ -18,7 +18,7 @@ async def start(message: types.Message):
 async def handle_action(call: types.CallbackQuery):
     await bot.answer_callback_query(call.id)
     await bot.send_message(call.from_user.id, 'Please,write the name of the action')
-    await OrderFood.waiting_for_food_name.set()
+    await Action.state_action.set()
 
 async def name_action(message: types.Message, state: FSMContext): #Сохранили название Action в список
     await state.update_data(action_name=message.text.lower())
@@ -29,11 +29,31 @@ async def name_action(message: types.Message, state: FSMContext): #Сохран�
     await state.finish()
 
 
+#___________________________________КНОПКА Feel________________________________________
+@dp.callback_query_handler(lambda c: c.data == 'feel')
+async def handle_action(call: types.CallbackQuery):
+    await bot.answer_callback_query(call.id)
+    await bot.send_message(call.from_user.id, 'Please,write the name of the feel')
+    await Feel.wait1.set()
 
+async def name_feel(message: types.Message, state: FSMContext):
+    await state.update_data(name_of_feel=message.text.lower())
+    await message.answer("Choose data:")
+    await Feel.wait2.set()
+
+async def date_feel(message: types.Message, state: FSMContext):
+    await state.update_data(date_of_feel=message.text.lower())
+    feel_data = await state.get_data()
+    loop = asyncio.get_event_loop()
+    loop.run_in_executor(None, requests.post, "https://cernev-assistant-api.herokuapp.com/api/v1/event", {'label': feel_data['name_of_feel']},{'date': feel_data['date_of_feel']} )
+    await message.answer(f"Thank you, feel: {feel_data['name_of_feel']}, data:  {feel_data['date_of_feel']}, is recorded")
+    await state.finish()
 
 def register_handlers_food(dp: Dispatcher):
     dp.register_message_handler(start, commands="start", state="*")
-    dp.register_message_handler(name_action, state=OrderFood.waiting_for_food_name)
+    dp.register_message_handler(name_action, state=Action.state_action)
+    dp.register_message_handler(name_feel, state=Feel.wait1)
+    dp.register_message_handler(date_feel, state=Feel.wait2)
 
 
 if __name__ == '__main__':
