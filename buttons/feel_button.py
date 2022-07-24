@@ -4,16 +4,16 @@ import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 
-from order import Feel
+from states import States
 
 
 async def name_feel(message: types.Message, state: FSMContext):
     await state.update_data(name_of_feel=message.text.lower())
     await message.answer("Choose estimation:")
-    await Feel.wait2.set()
+    await States.wait_for_feel_estimation.set()
 
 
-async def date_feel(message: types.Message, state: FSMContext):
+async def estimation_feel(message: types.Message, state: FSMContext):
     await state.update_data(date_of_feel=message.text.lower())
     feel_data = await state.get_data()
     loop = asyncio.get_event_loop()
@@ -36,4 +36,4 @@ class FeelButton:
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
             await bot.send_message(call.from_user.id, 'Please,write the name of the feel')
-            await Feel.wait1.set()
+            await States.wait_for_feel_name.set()

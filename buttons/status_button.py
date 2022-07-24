@@ -4,13 +4,13 @@ import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 
-from order import Status
+from states import States
 
 
 async def name_status(message: types.Message, state: FSMContext):
     await state.update_data(name_of_status=message.text.lower())
     await message.answer("Choose level (x/100):")
-    await Status.wait_st2.set()
+    await States.wait_for_status_estimation.set()
 
 
 async def date_status(message: types.Message, state: FSMContext):
@@ -36,4 +36,4 @@ class StatusButton:
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
             await bot.send_message(call.from_user.id, 'Please,write the name of the status')
-            await Status.wait_st1.set()
+            await States.wait_for_status_name.set()
