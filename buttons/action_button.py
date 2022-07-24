@@ -7,7 +7,7 @@ from aiogram.dispatcher import FSMContext
 from order import Action
 
 
-async def name_action(message: types.Message, state: FSMContext):  # Сохранили название Action в список
+async def name_action(message: types.Message, state: FSMContext):
     await state.update_data(action_name=message.text.lower())
     user_data = await state.get_data()
     loop = asyncio.get_event_loop()

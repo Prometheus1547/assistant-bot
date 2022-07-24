@@ -4,8 +4,9 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 
-from buttons import action_button
+from buttons import action_button, feel_button
 from buttons.action_button import ActionButton
+from buttons.feel_button import FeelButton
 from config import TOKEN
 from markups import ikb_menu
 from order import Action, Feel, Status
@@ -16,31 +17,6 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 
 async def start(message: types.Message):
     await message.answer("Please, choose something", reply_markup=ikb_menu)
-
-
-# ___________________________________BUTTON FEEL________________________________________
-@dp.callback_query_handler(lambda c: c.data == 'feel')
-async def handle_action(call: types.CallbackQuery):
-    await bot.answer_callback_query(call.id)
-    await bot.send_message(call.from_user.id, 'Please,write the name of the feel')
-    await Feel.wait1.set()
-
-
-async def name_feel(message: types.Message, state: FSMContext):
-    await state.update_data(name_of_feel=message.text.lower())
-    await message.answer("Choose data:")
-    await Feel.wait2.set()
-
-
-async def date_feel(message: types.Message, state: FSMContext):
-    await state.update_data(date_of_feel=message.text.lower())
-    feel_data = await state.get_data()
-    loop = asyncio.get_event_loop()
-    loop.run_in_executor(None, requests.post, "https://cernev-assistant-api.herokuapp.com/api/v1/feel",
-                         {'category': feel_data['name_of_feel'], 'date': feel_data['date_of_feel']})
-    await message.answer(
-        f"Thank you, feel: {feel_data['name_of_feel']}, data:  {feel_data['date_of_feel']}, is recorded")
-    await state.finish()
 
 
 # ___________________________________BUTTON STATUS________________________________________
@@ -72,8 +48,8 @@ def register_handlers_food(dp: Dispatcher):
     dp.register_message_handler(start, commands="start", state="*")
     dp.register_message_handler(action_button.name_action, state=Action.state_action)
 
-    dp.register_message_handler(name_feel, state=Feel.wait1)
-    dp.register_message_handler(date_feel, state=Feel.wait2)
+    dp.register_message_handler(feel_button.name_feel, state=Feel.wait1)
+    dp.register_message_handler(feel_button.date_feel, state=Feel.wait2)
 
     dp.register_message_handler(name_status, state=Status.wait_st1)
     dp.register_message_handler(date_status, state=Status.wait_st2)
@@ -82,5 +58,9 @@ def register_handlers_food(dp: Dispatcher):
 if __name__ == '__main__':
     action_btn = ActionButton(dp)
     action_btn.init_action_button()
+
+    feel_btn = FeelButton(dp)
+    feel_btn.init_feel_button()
+
     register_handlers_food(dp)
     executor.start_polling(dp)
