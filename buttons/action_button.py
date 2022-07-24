@@ -6,8 +6,6 @@ from states import States
 from config import HOST
 
 
-
-
 async def name_action(message: types.Message, state: FSMContext):
     await state.update_data(action_name=message.text.lower())
     user_data = await state.get_data()
