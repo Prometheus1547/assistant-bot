@@ -1,13 +1,11 @@
-from aiogram import Bot, Dispatcher, executor, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram import Dispatcher
 
 import commands.start
 from buttons import action_button, feel_button, status_button
 from buttons.action_button import ActionButton
 from buttons.feel_button import FeelButton
 from buttons.status_button import StatusButton
-from config import TOKEN
-from order import Action, Feel, Status
+from order import Feel, Status
 
 
 def register_buttons(dp: Dispatcher):
@@ -23,7 +21,8 @@ def register_buttons(dp: Dispatcher):
 
 def register_handlers(dp: Dispatcher):
     dp.register_message_handler(commands.start.start, commands="start", state="*")
-    dp.register_message_handler(action_button.name_action, state=Action.state_action)
+
+    dp.register_message_handler(action_button.name_action, state=action_button.States.wait_for_label)
 
     dp.register_message_handler(feel_button.name_feel, state=Feel.wait1)
     dp.register_message_handler(feel_button.date_feel, state=Feel.wait2)

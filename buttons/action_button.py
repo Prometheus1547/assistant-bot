@@ -3,8 +3,7 @@ import asyncio
 import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
-
-from order import Action
+from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
 async def name_action(message: types.Message, state: FSMContext):
@@ -15,6 +14,10 @@ async def name_action(message: types.Message, state: FSMContext):
                          {'label': user_data['action_name']})
     await message.answer(f"Thank you, action: {user_data['action_name']} is recorded")
     await state.finish()
+
+
+class States(StatesGroup):
+    wait_for_label = State()
 
 
 class ActionButton:
@@ -29,4 +32,4 @@ class ActionButton:
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
             await bot.send_message(call.from_user.id, 'Please,write the name of the action')
-            await Action.state_action.set()
+            await States.wait_for_label.set()
