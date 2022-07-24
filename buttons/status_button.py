@@ -1,15 +1,14 @@
 import asyncio
-
 import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
-
 from states import States
+from config import HOST
 
 
 async def name_status(message: types.Message, state: FSMContext):
     await state.update_data(name_of_status=message.text.lower())
-    await message.answer("Choose level (x/100):")
+    await message.answer("Choose estimation:")
     await States.wait_for_status_estimation.set()
 
 
@@ -17,7 +16,7 @@ async def estimation_status(message: types.Message, state: FSMContext):
     await state.update_data(date_of_status=message.text.lower())
     status_data = await state.get_data()
     loop = asyncio.get_event_loop()
-    loop.run_in_executor(None, requests.post, "https://cernev-assistant-api.herokuapp.com/api/v1/status",
+    loop.run_in_executor(None, requests.post, f"{HOST}api/v1/status",
                          {'estimation': status_data['date_of_status'], 'label': status_data['name_of_status']})
     await message.answer(
         f"Thank you, status: {status_data['name_of_status']}, estimation:  {status_data['date_of_status']}, is recorded")
