@@ -24,6 +24,7 @@ class ActionButton:
     def register_callback(self):
         bot = self.bot
 
+
         @self.dp.callback_query_handler(lambda c: c.data == 'action')
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
