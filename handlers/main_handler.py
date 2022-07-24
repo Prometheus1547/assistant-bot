@@ -1,6 +1,6 @@
 from aiogram import Dispatcher
 
-import commands.start
+import commands.main_commands
 from states import States
 from buttons import action_button, feel_button, status_button
 from buttons.action_button import ActionButton
@@ -10,17 +10,17 @@ from buttons.status_button import StatusButton
 
 def register_buttons(dp: Dispatcher):
     action_btn = ActionButton(dp)
-    action_btn.init_action_button()
+    action_btn.register_callback()
 
     feel_btn = FeelButton(dp)
-    feel_btn.init_feel_button()
+    feel_btn.register_callback()
 
     status_btn = StatusButton(dp)
-    status_btn.init_status_button()
+    status_btn.register_callback()
 
 
 def register_handlers(dp: Dispatcher):
-    dp.register_message_handler(commands.start.start, commands="start", state="*")
+    dp.register_message_handler(commands.main_commands.start, commands="start", state="*")
 
     dp.register_message_handler(action_button.name_action, state=States.wait_for_action_name)
 
@@ -28,4 +28,4 @@ def register_handlers(dp: Dispatcher):
     dp.register_message_handler(feel_button.estimation_feel, state=States.wait_for_feel_estimation)
 
     dp.register_message_handler(status_button.name_status, state=States.wait_for_status_name)
-    dp.register_message_handler(status_button.date_status, state=States.wait_for_status_estimation)
+    dp.register_message_handler(status_button.estimation_status, state=States.wait_for_status_estimation)

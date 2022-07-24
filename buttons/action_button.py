@@ -22,7 +22,7 @@ class ActionButton:
         self.dp = dp
         self.bot = dp.bot
 
-    def init_action_button(self):
+    def register_callback(self):
         bot = self.bot
 
         @self.dp.callback_query_handler(lambda c: c.data == 'action')

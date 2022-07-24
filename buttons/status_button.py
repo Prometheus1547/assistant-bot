@@ -13,7 +13,7 @@ async def name_status(message: types.Message, state: FSMContext):
     await States.wait_for_status_estimation.set()
 
 
-async def date_status(message: types.Message, state: FSMContext):
+async def estimation_status(message: types.Message, state: FSMContext):
     await state.update_data(date_of_status=message.text.lower())
     status_data = await state.get_data()
     loop = asyncio.get_event_loop()
@@ -29,7 +29,7 @@ class StatusButton:
     def __init__(self, dp: Dispatcher):
         self.dp = dp
 
-    def init_status_button(self):
+    def register_callback(self):
         bot = self.dp.bot
 
         @self.dp.callback_query_handler(lambda c: c.data == 'status')

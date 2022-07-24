@@ -29,7 +29,7 @@ class FeelButton:
     def __init__(self, dp: Dispatcher):
         self.dp = dp
 
-    def init_feel_button(self):
+    def register_callback(self):
         bot = self.dp.bot
 
         @self.dp.callback_query_handler(lambda c: c.data == 'feel')
