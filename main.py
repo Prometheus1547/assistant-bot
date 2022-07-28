@@ -10,7 +10,7 @@ from handlers.main_handler import register_buttons, register_handlers
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-HEROKU_APP_NAME = 'cernev-assistant-bot'
+HEROKU_APP_NAME = os.getenv('APP_NAME')
 
 # webhook settings
 WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
