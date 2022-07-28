@@ -29,7 +29,7 @@ async def on_startup(dispatcher):
 async def on_shutdown(dispatcher):
     await bot.delete_webhook()
 
-
+#whats gonna happen?
 if __name__ == '__main__':
     register_buttons(dp)
     register_handlers(dp)
