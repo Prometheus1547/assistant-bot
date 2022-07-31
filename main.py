@@ -1,9 +1,7 @@
 import os
-
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils.executor import start_webhook
-
 from handlers.main_handler import register_buttons, register_handlers
 
 TOKEN = os.getenv('TOKEN')

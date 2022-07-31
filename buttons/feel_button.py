@@ -8,18 +8,18 @@ from config import HOST
 
 async def name_feel(message: types.Message, state: FSMContext):
     await state.update_data(name_of_feel=message.text.lower())
-    await message.answer("Choose estimation:")
+    await message.answer("Please give the estimation:")
     await States.wait_for_feel_estimation.set()
 
 
 async def estimation_feel(message: types.Message, state: FSMContext):
-    await state.update_data(date_of_feel=message.text.lower())
+    await state.update_data(estimation_of_feel=message.text.lower())
     feel_data = await state.get_data()
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, requests.post, f"{HOST}api/v1/feel",
-                         {'category': feel_data['name_of_feel'], 'estimation': feel_data['date_of_feel']})
+                         {'category': feel_data['name_of_feel'], 'estimation': feel_data['estimation_of_feel']})
     await message.answer(
-        f"Thank you, feel: {feel_data['name_of_feel']}, estimation:  {feel_data['date_of_feel']}, is recorded")
+        f"Success! Feel '{feel_data['name_of_feel']}' with estimation of '{feel_data['estimation_of_feel']}' was created.")
     await state.finish()
 
 

@@ -12,7 +12,7 @@ async def name_action(message: types.Message, state: FSMContext):
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, requests.post, f"{HOST}api/v1/action",
                          {'label': user_data['action_name']})
-    await message.answer(f"Thank you, action: {user_data['action_name']} is recorded")
+    await message.answer(f"Success! Action '{user_data['action_name']}' was created.")
     await state.finish()
 
 
@@ -27,5 +27,5 @@ class ActionButton:
         @self.dp.callback_query_handler(lambda c: c.data == 'action')
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
-            await bot.send_message(call.from_user.id, 'Please,write the name of the action')
+            await bot.send_message(call.from_user.id, 'Please give the name of action')
             await States.wait_for_action_name.set()
