@@ -7,12 +7,12 @@ from config import HOST
 
 
 async def name_action(message: types.Message, state: FSMContext):
-    await state.update_data(action_name=message.text.lower())
-    user_data = await state.get_data()
+    await state.update_data(action_name=message.text.lower(), user_id_from_TG=message.from_user.id)
+    action_data = await state.get_data()
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, requests.post, f"{HOST}api/v1/action",
-                         {'label': user_data['action_name']})
-    await message.answer(f"Success! Action '{user_data['action_name']}' was created.")
+                         {'label': action_data['action_name'], 'userId': action_data['user_id_from_TG'],})
+    await message.answer(f"Success! Action '{action_data['action_name']}' was created.")
     await state.finish()
 
 

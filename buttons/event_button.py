@@ -7,12 +7,12 @@ from config import HOST
 
 
 async def name_event(message: types.Message, state: FSMContext):
-    await state.update_data(event_name=message.text.lower())
-    user_data = await state.get_data()
+    await state.update_data(event_name=message.text.lower(), user_id_from_TG= message.from_user.id)
+    event_data = await state.get_data()
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, requests.post, f"{HOST}api/v1/event",
-                         {'label': user_data['event_name']})
-    await message.answer(f"Success! Event '{user_data['event_name']}' was created.")
+                         {'label': event_data['event_name'],'userId': event_data['user_id_from_TG']})
+    await message.answer(f"Success! Event '{event_data['event_name']}' was created.")
     await state.finish()
 
 class EventButton:

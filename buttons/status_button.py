@@ -13,11 +13,11 @@ async def name_status(message: types.Message, state: FSMContext):
 
 
 async def estimation_status(message: types.Message, state: FSMContext):
-    await state.update_data(estimation_of_status=message.text.lower())
+    await state.update_data(estimation_of_status=message.text.lower(), user_id_from_TG= message.from_user.id)
     status_data = await state.get_data()
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, requests.post, f"{HOST}api/v1/status",
-                         {'estimation': status_data['estimation_of_status'], 'label': status_data['name_of_status']})
+                         {'estimation': status_data['estimation_of_status'], 'userId': status_data['user_id_from_TG'], 'label': status_data['name_of_status']})
     await message.answer(
         f"Success! Status '{status_data['name_of_status']}' with estimation of '{status_data['estimation_of_status']}' was created.")
     await state.finish()
