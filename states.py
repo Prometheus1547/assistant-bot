@@ -9,3 +9,6 @@ class States(StatesGroup):
 
     wait_for_status_name = State()
     wait_for_status_estimation = State()
+
+    wait_for_event_name = State()
+
