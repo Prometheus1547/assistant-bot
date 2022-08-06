@@ -1,3 +1,3 @@
-HOST = 'http://cernevassistantapi-env.eba-ummm56d3.eu-central-1.elasticbeanstalk.com/'
+HOST = 'http://cernev-assistant-api-prod.eu-central-1.elasticbeanstalk.com/'
 PORT = '5000'
 
