@@ -20,7 +20,7 @@ async def estimation_status(message: types.Message, state: FSMContext):
         status_data = await state.get_data()
         loop = asyncio.get_event_loop()
         loop.run_in_executor(None, requests.post, f"{HOST}api/v1/status",
-                             {'estimation': status_data['estimation_of_status'], 'userId': status_data['user_id_from_TG'], 'label': status_data['name_of_status']})
+                             {'estimation': status_data['estimation_of_status'], 'userId': status_data['user_id_from_TG'], 'name': status_data['name_of_status']})
         await message.answer(
             f"Success! Status '{status_data['name_of_status']}', estimation '{status_data['estimation_of_status']}' was created.", reply_markup=ReplyKeyboardRemove())
         await state.finish()

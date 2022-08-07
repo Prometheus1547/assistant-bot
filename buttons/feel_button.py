@@ -14,8 +14,8 @@ feel_category = ['Energy', 'Focus', 'Health', 'Mood']
 async def name_feel(message: types.Message, state: FSMContext):
     await state.update_data(name_of_feel=message.text)
     if message.text in feel_category:
-            await message.answer("Please estimate:", reply_markup=keyboard_for_estimation)
-            await States.wait_for_feel_estimation.set()
+        await message.answer("Please estimate:", reply_markup=keyboard_for_estimation)
+        await States.wait_for_feel_estimation.set()
     else:
         await message.answer("Sorry! Wrong category! Please choose one from below:")
 
