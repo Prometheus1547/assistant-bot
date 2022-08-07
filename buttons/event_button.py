@@ -26,5 +26,5 @@ class EventButton:
         @self.dp.callback_query_handler(lambda c: c.data == 'event')
         async def handle_event(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
-            await bot.send_message(call.from_user.id, 'Please give the name of event')
+            await bot.send_message(call.from_user.id, 'Please name event:')
             await States.wait_for_event_name.set()

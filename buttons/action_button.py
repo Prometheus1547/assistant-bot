@@ -27,5 +27,5 @@ class ActionButton:
         @self.dp.callback_query_handler(lambda c: c.data == 'action')
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
-            await bot.send_message(call.from_user.id, 'Please give the name of action')
+            await bot.send_message(call.from_user.id, 'Please name action:')
             await States.wait_for_action_name.set()

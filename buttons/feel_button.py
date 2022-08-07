@@ -13,7 +13,7 @@ feel_category = ['Energy', 'Focus', 'Health', 'Mood']
 async def name_feel(message: types.Message, state: FSMContext):
     await state.update_data(name_of_feel=message.text.lower())
     if message.text in feel_category:
-            await message.answer("Please give the estimation:", reply_markup=aiogram.types.ReplyKeyboardRemove())
+            await message.answer("Please estimate:", reply_markup=aiogram.types.ReplyKeyboardRemove())
             await States.wait_for_feel_estimation.set()
     else:
         await message.answer("Sorry! Wrong category! Please choose one from below:")
@@ -27,7 +27,7 @@ async def estimation_feel(message: types.Message, state: FSMContext):
         loop.run_in_executor(None, requests.post, f"{HOST}api/v1/feel",
                              {'category': feel_data['name_of_feel'], 'userId': feel_data['user_id_from_TG'], 'estimation': feel_data['estimation_of_feel']})
         await message.answer(
-            f"Success! Feel '{feel_data['name_of_feel']}' with estimation of '{feel_data['estimation_of_feel']}' was created.")
+            f"Success! Feel '{feel_data['name_of_feel']}', estimation '{feel_data['estimation_of_feel']}' was created.")
         await state.finish()
     else:
         await message.answer("Sorry! Please give the estimation:")
