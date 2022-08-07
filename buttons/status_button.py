@@ -9,13 +9,13 @@ from aiogram.types import ReplyKeyboardRemove
 
 
 async def name_status(message: types.Message, state: FSMContext):
-    await state.update_data(name_of_status=message.text.lower())
+    await state.update_data(name_of_status=message.text)
     await message.answer("Please estimate:", reply_markup=keyboard_for_estimation)
     await States.wait_for_status_estimation.set()
 
 
 async def estimation_status(message: types.Message, state: FSMContext):
-    await state.update_data(estimation_of_status=message.text.lower(), user_id_from_TG= message.from_user.id)
+    await state.update_data(estimation_of_status=message.text, user_id_from_TG= message.from_user.id)
     if message.text.isdigit():
         status_data = await state.get_data()
         loop = asyncio.get_event_loop()

@@ -12,7 +12,7 @@ from config import HOST
 feel_category = ['Energy', 'Focus', 'Health', 'Mood']
 
 async def name_feel(message: types.Message, state: FSMContext):
-    await state.update_data(name_of_feel=message.text.lower())
+    await state.update_data(name_of_feel=message.text)
     if message.text in feel_category:
             await message.answer("Please estimate:", reply_markup=keyboard_for_estimation)
             await States.wait_for_feel_estimation.set()
@@ -21,7 +21,7 @@ async def name_feel(message: types.Message, state: FSMContext):
 
 
 async def estimation_feel(message: types.Message, state: FSMContext):
-    await state.update_data(estimation_of_feel=message.text.lower(), user_id_from_TG=message.from_user.id)
+    await state.update_data(estimation_of_feel=message.text, user_id_from_TG=message.from_user.id)
     if message.text.isdigit():
         feel_data = await state.get_data()
         loop = asyncio.get_event_loop()
