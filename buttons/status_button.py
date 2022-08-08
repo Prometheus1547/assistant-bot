@@ -1,11 +1,13 @@
 import asyncio
+
 import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
+from aiogram.types import ReplyKeyboardRemove
+
+from config import HOST
 from markups import keyboard_for_estimation
 from states import States
-from config import HOST
-from aiogram.types import ReplyKeyboardRemove
 
 
 async def name_status(message: types.Message, state: FSMContext):
@@ -15,14 +17,16 @@ async def name_status(message: types.Message, state: FSMContext):
 
 
 async def estimation_status(message: types.Message, state: FSMContext):
-    await state.update_data(estimation_of_status=message.text, user_id_from_TG= message.from_user.id)
+    await state.update_data(estimation_of_status=message.text, user_id_from_TG=message.from_user.id)
     if message.text.isdigit():
         status_data = await state.get_data()
         loop = asyncio.get_event_loop()
         loop.run_in_executor(None, requests.post, f"{HOST}api/v1/status",
-                             {'estimation': status_data['estimation_of_status'], 'userId': status_data['user_id_from_TG'], 'name': status_data['name_of_status']})
+                             {'estimation': status_data['estimation_of_status'],
+                              'userId': status_data['user_id_from_TG'], 'name': status_data['name_of_status']})
         await message.answer(
-            f"Success! Status '{status_data['name_of_status']}', estimation '{status_data['estimation_of_status']}' was created.", reply_markup=ReplyKeyboardRemove())
+            f"Success! Status '{status_data['name_of_status']}', estimation '{status_data['estimation_of_status']}' was created.",
+            reply_markup=ReplyKeyboardRemove())
         await state.finish()
     else:
         await message.answer("Sorry! Please give the estimation:")

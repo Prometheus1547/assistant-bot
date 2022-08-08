@@ -1,19 +1,22 @@
 import asyncio
+
 import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
-from states import States
+
 from config import HOST
+from states import States
 
 
 async def name_event(message: types.Message, state: FSMContext):
-    await state.update_data(event_name=message.text, user_id_from_TG= message.from_user.id)
+    await state.update_data(event_name=message.text, user_id_from_TG=message.from_user.id)
     event_data = await state.get_data()
     loop = asyncio.get_event_loop()
     loop.run_in_executor(None, requests.post, f"{HOST}api/v1/event",
-                         {'name': event_data['event_name'],'userId': event_data['user_id_from_TG']})
+                         {'name': event_data['event_name'], 'userId': event_data['user_id_from_TG']})
     await message.answer(f"Success! Event '{event_data['event_name']}' was created.")
     await state.finish()
+
 
 class EventButton:
     def __init__(self, dp: Dispatcher):

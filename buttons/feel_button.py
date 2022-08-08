@@ -1,15 +1,16 @@
 import asyncio
 
-import aiogram
 import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
+
+from config import HOST
 from markups import keyboard_for_feel, keyboard_for_estimation
 from states import States
-from config import HOST
 
 feel_category = ['Energy', 'Focus', 'Health', 'Mood']
+
 
 async def name_feel(message: types.Message, state: FSMContext):
     await state.update_data(name_of_feel=message.text)
@@ -26,9 +27,11 @@ async def estimation_feel(message: types.Message, state: FSMContext):
         feel_data = await state.get_data()
         loop = asyncio.get_event_loop()
         loop.run_in_executor(None, requests.post, f"{HOST}api/v1/feel",
-                             {'category': feel_data['name_of_feel'], 'userId': feel_data['user_id_from_TG'], 'estimation': feel_data['estimation_of_feel']})
+                             {'category': feel_data['name_of_feel'], 'userId': feel_data['user_id_from_TG'],
+                              'estimation': feel_data['estimation_of_feel']})
         await message.answer(
-            f"Success! Feel '{feel_data['name_of_feel']}', estimation '{feel_data['estimation_of_feel']}' was created.", reply_markup=ReplyKeyboardRemove())
+            f"Success! Feel '{feel_data['name_of_feel']}', estimation '{feel_data['estimation_of_feel']}' was created.",
+            reply_markup=ReplyKeyboardRemove())
         await state.finish()
     else:
         await message.answer("Sorry! Please give the estimation:")

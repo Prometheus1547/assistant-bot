@@ -1,12 +1,12 @@
 from aiogram import Dispatcher
 
 import commands.main_commands
-from buttons.event_button import EventButton
-from states import States
 from buttons import action_button, feel_button, status_button, event_button
 from buttons.action_button import ActionButton
+from buttons.event_button import EventButton
 from buttons.feel_button import FeelButton
 from buttons.status_button import StatusButton
+from states import States
 
 
 def register_buttons(dp: Dispatcher):
