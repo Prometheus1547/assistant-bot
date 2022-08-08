@@ -27,6 +27,7 @@ async def estimation_feel(message: types.Message, state: FSMContext):
         feel_data = await state.get_data()
         loop = asyncio.get_event_loop()
         loop.run_in_executor(None, requests.post, f"{HOST}api/v1/feel",
+                             None,
                              {'category': feel_data['name_of_feel'], 'userId': feel_data['user_id_from_TG'],
                               'estimation': feel_data['estimation_of_feel']})
         await message.answer(
