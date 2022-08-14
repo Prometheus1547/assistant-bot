@@ -16,7 +16,7 @@ def register_buttons(dp: Dispatcher):
 
 
 def register_handlers(dp: Dispatcher):
-    dp.register_message_handler(commands.main_commands.start, commands="start", state="*")
+    dp.register_message_handler(commands.main_commands.start_command, commands="start", state="*")
 
     dp.register_message_handler(status_button.name_status, state=States.wait_for_status_name)
     dp.register_message_handler(status_button.estimation_status, state=States.wait_for_status_estimation)
