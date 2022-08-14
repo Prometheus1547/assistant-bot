@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
 from config import HOST
-from markups import keyboard_for_estimation
+from markups import keyboard_for_status, keyboard_for_estimation
 from states import States
 
 
@@ -23,8 +23,8 @@ async def estimation_status(message: types.Message, state: FSMContext):
         loop = asyncio.get_event_loop()
         loop.run_in_executor(None, requests.post, f"{HOST}api/v1/status",
                              None,
-                             {'estimation': status_data['estimation_of_status'],
-                              'userId': status_data['user_id_from_TG'], 'name': status_data['name_of_status']})
+                             {'name': status_data['name_of_status'], 'userId': status_data['user_id_from_TG'],
+                              'estimation': status_data['estimation_of_status']})
         await message.answer(
             f"Success! Status '{status_data['name_of_status']}', estimation '{status_data['estimation_of_status']}' was created.",
             reply_markup=ReplyKeyboardRemove())
@@ -44,5 +44,6 @@ class StatusButton:
         @self.dp.callback_query_handler(lambda c: c.data == 'status')
         async def handle_action(call: types.CallbackQuery):
             await bot.answer_callback_query(call.id)
-            await bot.send_message(call.from_user.id, 'Please name status:')
+            await bot.send_message(call.from_user.id, 'Please name status:',
+                                   reply_markup=keyboard_for_status)
             await States.wait_for_status_name.set()
