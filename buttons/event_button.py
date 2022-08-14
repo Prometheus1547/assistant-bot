@@ -4,7 +4,8 @@ import requests
 from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 
-from config import HOST
+from commands.main_commands import start_command
+from config import HOST, SLEEP_TIME
 from states import States
 
 
@@ -18,7 +19,8 @@ async def name_event(message: types.Message, state: FSMContext):
                          {'name': event_data['event_name'], 'userId': event_data['user_id_from_TG']})
     await message.answer(f"Success! Event '{event_data['event_name']}' was created.")
     await state.finish()
-
+    await asyncio.sleep(SLEEP_TIME)
+    await start_command(message)
 
 class EventButton:
     def __init__(self, dp: Dispatcher):

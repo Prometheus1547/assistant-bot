@@ -5,7 +5,8 @@ from aiogram import Dispatcher, types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardRemove
 
-from config import HOST
+from commands.main_commands import start_command
+from config import HOST, SLEEP_TIME
 from markups import keyboard_for_status, keyboard_for_estimation
 from states import States
 
@@ -29,6 +30,8 @@ async def estimation_status(message: types.Message, state: FSMContext):
             f"Success! Status '{status_data['name_of_status']}', estimation '{status_data['estimation_of_status']}' was created.",
             reply_markup=ReplyKeyboardRemove())
         await state.finish()
+        await asyncio.sleep(SLEEP_TIME)
+        await start_command(message)
     else:
         await message.answer("Sorry! Please give the estimation:")
 
