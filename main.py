@@ -2,7 +2,7 @@ import os
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.utils import executor
+from aiogram.utils.executor import start_webhook
 
 from handlers.main_handler import register_buttons, register_handlers
 
@@ -11,10 +11,9 @@ TOKEN = os.getenv('TOKEN')
 bot = Bot(token=TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-HEROKU_APP_NAME = os.getenv('HEROKU_APP_NAME')
 
 # webhook settings
-WEBHOOK_HOST = f'https://{HEROKU_APP_NAME}.herokuapp.com'
+WEBHOOK_HOST = os.getenv('WEBHOOK_URL')
 WEBHOOK_PATH = f'/webhook/{TOKEN}'
 WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 
@@ -34,13 +33,13 @@ async def on_shutdown(dispatcher):
 if __name__ == '__main__':
     register_buttons(dp)
     register_handlers(dp)
-    executor.start_polling(dp)
-    # start_webhook(
-    #     dispatcher=dp,
-    #     webhook_path=WEBHOOK_PATH,
-    #     skip_updates=True,
-    #     on_startup=on_startup,
-    #     on_shutdown=on_shutdown,
-    #     host=WEBAPP_HOST,
-    #     port=WEBAPP_PORT
-    # )
+    # executor.start_polling(dp)
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        skip_updates=True,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT
+    )
